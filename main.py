@@ -23,7 +23,7 @@ class GifEmojiBot(commands.AutoShardedBot):
 
     async def setup_hook(self):
         await self.load_extension("commands.gif")
-
+        await self.load_extension("commands.gif_button")
         self.tree.copy_global_to(guild=GUILD)
         await self.tree.sync()  # guild=GUILD
 
