@@ -21,21 +21,18 @@ class GifButtonView(discord.ui.View):
     async def button_callback(self, interaction: discord.Interaction):
         emoji_id = int(interaction.data['custom_id'].split('_')[-1])
         emoji = discord.utils.get(interaction.guild.emojis, id=emoji_id)
-        
-        if emoji:
-            embed = discord.Embed(
-            title="",
-            color=0x6DB69E,
-        )
 
         if emoji:
+            # 사용자 프로필 사진이 없으면 기본 아바타 사용
+            avatar_url = interaction.user.avatar.url if interaction.user.avatar else interaction.user.default_avatar.url
+            
             # 임베드 생성
             embed = discord.Embed(
                 color=interaction.user.top_role.color,
             )
             embed.set_author(
                 name=interaction.user.display_name,
-                icon_url=interaction.user.avatar.url
+                icon_url=avatar_url
             )
             embed.set_image(url=emoji.url)
 
