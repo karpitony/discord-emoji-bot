@@ -1,0 +1,10 @@
+.idea
+.git
+.gitignore
+.dockerignore
+Dockerfile
+.env.example
+*.pyc
+*.md
+*.sh
+*.yml
