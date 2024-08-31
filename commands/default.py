@@ -22,8 +22,7 @@ class DefaultCommand(commands.Cog):
             description="""
 - 니트로 없이 GIF 이모지 사용, 더블 이모지 확대 등 디스코드에서 이모지 사용 경혐을 향상시켜주는 봇입니다.
 - 명령어 목록을 보려면 `/list` 명령어나 하단 버튼을 클릭해주세요.
-- 별도의 서포트 디스코드는 운영하고 있지 않습니다. 피드백이나 이슈는 [깃허브 이슈](https://github.com/karpitony/discord-emoji-bot/issues)에 남겨주세요 :)
-\n      
+- 별도의 서포트 디스코드는 운영하고 있지 않습니다. 피드백이나 이슈는 [깃허브 이슈](https://github.com/karpitony/discord-emoji-bot/issues)에 남겨주세요 :)\n\n      
 [초대하기](https://discord.com/oauth2/authorize?client_id=1275860131711815690&permissions=826781527040&integration_type=0&scope=bot) | [소스코드 구경하기](https://github.com/karpitony/discord-emoji-bot)
             """   
         )
@@ -32,14 +31,25 @@ class DefaultCommand(commands.Cog):
             icon_url=f"{self.bot.user.avatar}"
         )
         
+        # 명령어 보기 버튼 생성
         view = discord.ui.View()
-        view.add_item(discord.ui.Button(label="명령어 목록 보기", custom_id="show_command_list"))
+
+        button = discord.ui.Button(
+            label="명령어 목록 보기",
+            style=discord.ButtonStyle.primary,
+            custom_id="show_command_list",
+        )
+        button.callback = self.button_callback
+        view.add_item(button)
 
         await interaction.response.send_message(embed=embed, view=view)
+
+    async def button_callback(self, interaction: discord.Interaction):
+        if interaction.data['custom_id'] == "show_command_list":
+            await self.show_command_list(interaction)
     
-    @app_commands.command(name="list")
-    async def ping(self, interaction: discord.Interaction) -> None:
-        """봇의 명령어 목록을 보여줍니다."""
+    async def show_command_list(self, interaction: discord.Interaction) -> None:
+        """봇의 명령어 목록을 보여주는 내부 메서드."""
         
         embed = discord.Embed(
             color=0xFDFD96,
@@ -53,11 +63,11 @@ class DefaultCommand(commands.Cog):
         embed.add_field(name="/double", value="이모지 두개를 합쳐서 임베드에 담아 크게 보여줍니다.", inline=False)
         
         await interaction.response.send_message(embed=embed)
-        
-    @commands.Cog.listener()
-    async def on_interaction(self, interaction: discord.Interaction):
-        if interaction.data.get("custom_id") == "show_command_list":
-            await self.command_list(interaction)
+
+    @app_commands.command(name="list")
+    async def list(self, interaction: discord.Interaction) -> None:
+        """봇의 명령어 목록을 보여줍니다."""
+        await self.show_command_list(interaction)
 
     
 async def setup(bot: commands.Bot):
