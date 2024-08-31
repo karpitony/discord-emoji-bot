@@ -3,7 +3,6 @@ from typing import Any
 
 import aiohttp
 import discord
-from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -17,13 +16,16 @@ class EmojiBot(commands.AutoShardedBot):
         self.session: aiohttp.ClientSession = None
 
     async def setup_hook(self):
+        await self.load_extension("commands.default")
         # await self.load_extension("commands.gif")
         await self.load_extension("commands.select_gif")
         await self.load_extension("commands.double")
+        
         self.tree.copy_global_to(guild=GUILD)
-        await self.tree.sync()  # guild=GUILD
+        await self.tree.sync()
         
     async def on_ready(self):
+        print("Bot is ready!")
         activity = discord.Game("/help로 명령어 보기")
         await self.change_presence(status=discord.Status.online, activity=activity)
     
