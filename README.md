@@ -14,11 +14,14 @@
 <hr>
 
 ## 뭐하는 봇인가요?
+- 디스코드에서 이모지 경험을 더 풍부하게 해주는 봇입니다.
 
 ![예시 영상](img/example_test.gif)
+- 니트로 없이 디스코드에서 GIF 이모지를 보낼 수 있게 해줍니다.
 
-- 니트로 없이 디스코드에서 GIF 이모지를 보낼 수 있게 도와주는 봇입니다.
-- 슬래쉬(`/`) 명령어를 지원하며, 버튼을 통해 이모지를 손쉽게 전송할 수 있습니다.
+![예시 사진](img/double_example.png)
+- 두 이모지를 합쳐서 크게 보여주는 기능도 제공합니다.
+
 <br>
 
 ## 사용 방법 
@@ -31,8 +34,6 @@
 
 **3. 버튼을 눌러 GIF 이모지를 보내세요!**
 
-`/sendgif` 명령어의 경우 이모지의 이름을 모두 입력해줘야 합니다.
-> ex) `/sendgif :hello_gif:` 
 
 <br>
 
@@ -41,8 +42,10 @@
 ```
 📦discord-emoji-bot
  ┣ 📂commands
- ┃ ┣ 📜gif.py  # 초기 개발 파일로 /sendgif 명령어에 관한 파일입니다.
- ┃ ┗ 📜gif_button.py  # /selectgif에 관한 파일입니다.
+ ┃ ┣ 📜default.py
+ ┃ ┣ 📜double.py
+ ┃ ┣ 📜gif.py
+ ┃ ┗ 📜select_gif.py
  ┣ 📜.env.example
  ┣ 📜.gitattributes
  ┣ 📜.gitignore
