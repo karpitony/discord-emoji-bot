@@ -7,9 +7,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
-
 GUILD = discord.Object(id=os.getenv("TEST_GUILD_ID"))
-
 
 class GifEmojiBot(commands.AutoShardedBot):
     def __init__(self):
@@ -18,12 +16,12 @@ class GifEmojiBot(commands.AutoShardedBot):
             intents=discord.Intents.default(),
             allowed_mentions=discord.AllowedMentions.none(),
         )
-
         self.session: aiohttp.ClientSession = None
 
     async def setup_hook(self):
-        await self.load_extension("commands.gif")
+        # await self.load_extension("commands.gif")
         await self.load_extension("commands.gif_button")
+        await self.load_extension("commands.double")
         self.tree.copy_global_to(guild=GUILD)
         await self.tree.sync()  # guild=GUILD
 
@@ -36,8 +34,5 @@ class GifEmojiBot(commands.AutoShardedBot):
         return await super().on_command_error(context, exception)
     
 if __name__=="__main__":
-
-
     bot = GifEmojiBot()
-
     bot.run(os.getenv("BOT_TOKEN"))
