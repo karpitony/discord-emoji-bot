@@ -14,14 +14,21 @@ class Double(commands.Cog):
     async def select_gif(self, interaction: discord.Interaction, l_emoji: str, r_emoji: str):
         """두 이모지를 합쳐서 임베드로 전송합니다."""
         
+        same_emoji = True if l_emoji == r_emoji else False
+        
         # 서버에서 이모지 찾기
         l_emoji_name = l_emoji.split(":")[1]
         r_emoji_name = r_emoji.split(":")[1]
         
-        left_emoji = None; right_emoji = None
+        left_emoji = None
+        right_emoji = None
+        
         for emoji in interaction.guild.emojis:
             if emoji.name == l_emoji_name:
                 left_emoji = emoji
+                if same_emoji:
+                    right_emoji = emoji
+                    break
             elif emoji.name == r_emoji_name:
                 right_emoji = emoji
 
@@ -31,7 +38,7 @@ class Double(commands.Cog):
             return
         
         async def download_emoji(emoji):
-            # 이모지 URL 설정 (webp/gif/png)
+            # 이모지 URL 탐색 (webp/gif/png)
             extensions = ['gif', 'png', 'webp']
             image = None
             async with ClientSession() as session:
