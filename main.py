@@ -26,7 +26,7 @@ class EmojiBot(commands.AutoShardedBot):
         
     async def on_ready(self):
         print("Bot is ready!")
-        activity = discord.Game("/help로 명령어 보기")
+        activity = discord.Game("/list로 명령어 보기")
         await self.change_presence(status=discord.Status.online, activity=activity)
     
     async def on_error(self, event_method: str, /, *args: Any, **kwargs: Any) -> None:

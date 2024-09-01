@@ -10,12 +10,31 @@ class Double(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="double")
-    @app_commands.describe(l_emoji="왼쪽 이모지 이름", r_emoji="오른쪽 이모지 이름")
-    async def select_gif(self, interaction: discord.Interaction, l_emoji: str, r_emoji: str):
+    @app_commands.describe(emoji_input="이모지 입력창")
+    async def select_gif(self, interaction: discord.Interaction, emoji_input:str):
         """두 이모지를 합쳐서 임베드로 전송합니다."""
         
-        same_emoji = True if l_emoji == r_emoji else False
+        # 이모지 분리
+        emojis = emoji_input.split()
+
+        if len(emojis) != 2:
+            await interaction.response.send_message("올바른 형식으로 두 개의 이모지를 입력해주세요. 예시: `:emoji1::emoji2:`", ephemeral=True)
+            return
+
+        l_emoji = emojis[0]
+        r_emoji = emojis[1]
+        same_emoji:bool = True if l_emoji == r_emoji else False
         
+        # 이모지에서 이름과 ID 추출
+        try:
+            l_emoji_name = l_emoji.split(":")[1]
+            l_emoji_id = l_emoji.split(":")[2][:-1]
+            r_emoji_name = r_emoji.split(":")[1]
+            r_emoji_id = r_emoji.split(":")[2][:-1]
+        except IndexError:
+            await interaction.response.send_message("이모지 형식이 올바르지 않습니다. `<:emoji_name:emoji_id>` 형식으로 입력해주세요.", ephemeral=True)
+            return
+
         # 서버에서 이모지 찾기
         l_emoji_name = l_emoji.split(":")[1]
         r_emoji_name = r_emoji.split(":")[1]
@@ -23,6 +42,7 @@ class Double(commands.Cog):
         left_emoji = None
         right_emoji = None
         
+        # 중복인 경우 하나만 탐색하게끔
         for emoji in interaction.guild.emojis:
             if emoji.name == l_emoji_name:
                 left_emoji = emoji
@@ -31,6 +51,9 @@ class Double(commands.Cog):
                     break
             elif emoji.name == r_emoji_name:
                 right_emoji = emoji
+                if same_emoji:
+                    left_emoji = emoji
+                    break
 
 
         if not left_emoji or not right_emoji:
@@ -57,11 +80,17 @@ class Double(commands.Cog):
 
         try:
             # 이모지 이미지를 다운로드
-            left_emoji_image, left_ext = await download_emoji(left_emoji)
-            right_emoji_image, right_ext = await download_emoji(right_emoji)
+            if same_emoji:
+                left_emoji_image, left_ext = await download_emoji(left_emoji)
+                right_emoji_image, right_ext = left_emoji_image, left_ext
+            else:
+                left_emoji_image, left_ext = await download_emoji(left_emoji)
+                right_emoji_image, right_ext = await download_emoji(right_emoji)
+            
             if not left_emoji_image or not right_emoji_image:
                 await interaction.response.send_message("이모지 이미지를 다운로드하는 데 실패했습니다.", ephemeral=True)
                 return
+        
         except Exception as e:
             await interaction.response.send_message("이모지 이미지를 다운로드하는 도중 오류가 발생했습니다.", ephemeral=True)
             return
@@ -87,6 +116,7 @@ class Double(commands.Cog):
                 image_binary = io.BytesIO()
                 new_img.save(image_binary, 'PNG')
                 image_binary.seek(0)
+        
         except Exception as e:
             await interaction.response.send_message(f"이모지 이미지를 처리하는 데 실패했습니다: {str(e)}", ephemeral=True)
             return
