@@ -20,7 +20,6 @@ class EmojiBot(commands.AutoShardedBot):
     async def setup_hook(self):
         self.session = aiohttp.ClientSession()
         await self.load_extension("commands.default")
-        # await self.load_extension("commands.gif")
         await self.load_extension("commands.select_gif")
         await self.load_extension("commands.double")
         await self.load_extension("commands.double_emoji")
