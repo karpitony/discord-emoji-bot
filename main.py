@@ -8,18 +8,22 @@ from dotenv import load_dotenv
 
 class EmojiBot(commands.AutoShardedBot):
     def __init__(self):
+        intents=discord.Intents.default()
+        intents.message_content = True  # 메시지 내용을 읽기 위해 필요
         super().__init__(
             command_prefix="!",
-            intents=discord.Intents.default(),
+            intents=intents,
             allowed_mentions=discord.AllowedMentions.none(),
         )
-        self.session: aiohttp.ClientSession = None
+        self.session = None 
 
     async def setup_hook(self):
+        self.session = aiohttp.ClientSession()
         await self.load_extension("commands.default")
         # await self.load_extension("commands.gif")
         await self.load_extension("commands.select_gif")
         await self.load_extension("commands.double")
+        await self.load_extension("commands.double_emoji")
         
         self.tree.copy_global_to(guild=GUILD)
         await self.tree.sync()
@@ -37,6 +41,11 @@ class EmojiBot(commands.AutoShardedBot):
         print(context, exception)
         return await super().on_command_error(context, exception)
     
+    async def close(self):
+        await super().close()
+        if self.session:
+            await self.session.close() 
+            
 if __name__=="__main__":
     load_dotenv()
     GUILD = discord.Object(id=os.getenv("TEST_GUILD_ID"))
