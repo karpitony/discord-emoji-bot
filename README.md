@@ -21,6 +21,7 @@
 
 ![예시 사진](img/double_example.png)
 - 두 이모지를 합쳐서 크게 보여주는 기능도 제공합니다.
+- `2024.09.19` 이후로 `/double`명령어 없이도 채팅에 이모지 두개를 보내면 알아서 반응합니다!
 
 <br>
 
@@ -43,8 +44,8 @@
 📦discord-emoji-bot
  ┣ 📂commands
  ┃ ┣ 📜default.py
- ┃ ┣ 📜double.py
- ┃ ┣ 📜gif.py
+ ┃ ┣ 📜double_emoji.py # 채팅 메세지 감지
+ ┃ ┣ 📜double.py    # double 명령어 관련
  ┃ ┗ 📜select_gif.py
  ┣ 📜.env.example
  ┣ 📜.gitattributes
@@ -73,4 +74,8 @@ BOT_TOKEN=봇의 토큰
 pip install -r requirements.txt
 ```
 
-**4. 봇을 실행해주세요.**
+**4. `Discord Developer Portal`에 접속하세요.**
+- 봇을 만들고 `Privileged Gateway Intents`를 다음과 같이 설정해주세요.
+![Privileged Gateway Intents](./img/Privileged_Gateway_Intents.png)
+
+**5. 봇을 실행해주세요.**
